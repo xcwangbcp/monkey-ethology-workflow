@@ -45,8 +45,8 @@ HEATMAP_EXTENT = [150, 650, 350, 50]
 def simple_com(df: pd.DataFrame) -> pd.DataFrame:
     """SmallCage 固定三点均值重心（非加权）。"""
     out = df.copy()
-    out["center_x"] = (out["Head_x"] + out["Back_x"] + out["Tail(Root)_x"]) / 3
-    out["center_y"] = (out["Head_y"] + out["Back_y"] + out["Tail(Root)_y"]) / 3
+    out["center_x"] = (out["head_x"] + out["back_x"] + out["tail_base_x"]) / 3
+    out["center_y"] = (out["head_y"] + out["back_y"] + out["tail_base_y"]) / 3
     return out
 
 
