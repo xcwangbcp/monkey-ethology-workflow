@@ -43,11 +43,40 @@ HEATMAP_EXTENT = [150, 650, 350, 50]
 
 
 def simple_com(df: pd.DataFrame) -> pd.DataFrame:
-    """SmallCage 固定三点均值重心（非加权）。"""
+    """SmallCage 固定三点均值重心（非加权），兼容标准及旧版小写列名。"""
     out = df.copy()
-    out["center_x"] = (out["head_x"] + out["back_x"] + out["tail_base_x"]) / 3
-    out["center_y"] = (out["head_y"] + out["back_y"] + out["tail_base_y"]) / 3
+    # 复制输入表格。后续新增中心坐标列时，不会直接修改调用方传入的原始 df。
+    joint_columns = {
+        "head": ("Head", "head"),
+        "back": ("Back", "back"),
+        "tail": ("Tail(Root)", "tail_base"),
+    }
+    # 列出三个需要参与计算的关节点，以及每个关节点可接受的列名：
+    # 头部：优先找 Head，也接受旧名 head。
+    # 背部：优先找 Back，也接受旧名 back。
+    # 尾部：优先找 Tail(Root)，也接受旧名 tail_base。
+    # 这里的顺序很重要：如果标准名和旧名都存在，会优先选标准名。
+    selected = {}
+    # 建立一个空字典，用来记录最终选中的坐标列名。
+    for joint, candidates in joint_columns.items():
+        for candidate in candidates:
+            x_col, y_col = f"{candidate}_x", f"{candidate}_y"
+            if x_col in out.columns and y_col in out.columns:
+                selected[joint] = (x_col, y_col)
+                break
+        else:
+            expected = " or ".join(
+                f"{candidate}_x/{candidate}_y" for candidate in candidates
+            )
+            raise KeyError(f"Missing {joint} coordinate columns; expected {expected}")
+    # 检查表格是否同时包含该关节点的 X、Y 坐标。两列都存在才算找到有效候选。
+    # 把找到的列名记到 selected，然后停止搜索这个关节点的其他候选名称。
+    out["center_x"] = sum(out[selected[joint][0]] for joint in joint_columns) / 3
+    out["center_y"] = sum(out[selected[joint][1]] for joint in joint_columns) / 3
+    # out["center_x"] = (out["head_x"] + out["back_x"] + out["tail_base_x"]) / 3
+    # out["center_y"] = (out["head_y"] + out["back_y"] + out["tail_base_y"]) / 3
     return out
+    # 返回带有 center_x 和 center_y 新列的表格副本。
 
 
 def _clip_frames(n: int, max_frames: int) -> int:

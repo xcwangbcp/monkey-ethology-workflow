@@ -15,6 +15,7 @@ from monkey_ethology.config import load_config
 from monkey_ethology.features.adaptive_com import AdaptiveCOMExtractor
 from monkey_ethology.io.schema import flatten_dlc_dataframe, parse_session_name
 from monkey_ethology.preprocess.smooth import smooth_keypoints
+from monkey_ethology.viz.standard_plots import simple_com
 
 
 def test_parse_session_name():
@@ -27,6 +28,32 @@ def test_flatten_already_flat():
     df = pd.DataFrame({"Head_x": [1.0], "Head_y": [2.0], "Head_p": [0.9]})
     out = flatten_dlc_dataframe(df)
     assert "Head_x" in out.columns
+
+
+@pytest.mark.parametrize(
+    "columns",
+    [
+        ("Head", "Back", "Tail(Root)"),
+        ("head", "back", "tail_base"),
+    ],
+)
+def test_simple_com_supports_standard_and_legacy_joint_names(columns):
+    head, back, tail = columns
+    df = pd.DataFrame(
+        {
+            f"{head}_x": [3.0],
+            f"{head}_y": [6.0],
+            f"{back}_x": [6.0],
+            f"{back}_y": [9.0],
+            f"{tail}_x": [9.0],
+            f"{tail}_y": [12.0],
+        }
+    )
+
+    out = simple_com(df)
+
+    assert out.loc[0, "center_x"] == 6.0
+    assert out.loc[0, "center_y"] == 9.0
 
 
 def test_feature_and_classify_synthetic():

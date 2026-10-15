@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+      "name": "调试分析流程",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "monkey_ethology",
+      "cwd": "${workspaceFolder}",
+      "args": [
+        "run",
+        "--config",
+        "${workspaceFolder}\\my_ethology_config.yaml",
+        "--input",
+        "D:\\Data\\dlcData\\26.7.1_600_crop_pad_720x404_gpu_noaudioDLC_Resnet101_TJ-26-7-cropOct3shuffle8_snapshot_best-420.csv",
+        "--no-annotate"
+      ],
+      "console": "integratedTerminal"
+    }
+    ]
+}

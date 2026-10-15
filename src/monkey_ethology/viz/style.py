@@ -94,8 +94,10 @@ DEFAULT_COLORS = {
 
 
 def _font_list(preferred: str) -> list:
-    return [
+    fonts = [
         preferred,
+        "Microsoft YaHei",
+        "Noto Sans SC",
         "PingFang SC",
         "Heiti SC",
         "Songti SC",
@@ -107,6 +109,7 @@ def _font_list(preferred: str) -> list:
         "Helvetica",
         "DejaVu Sans",
     ]
+    return list(dict.fromkeys(fonts))
 
 
 def apply_style(cfg: Mapping) -> None:

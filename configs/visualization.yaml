@@ -3,7 +3,7 @@ style: academic
 dpi: 300
 formats: [png, pdf]
 figsize: [10.0, 6.0]
-font_family: PingFang SC
+font_family: Microsoft YaHei
 colormap: cividis
 plots:
   - ethogram

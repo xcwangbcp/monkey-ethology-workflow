@@ -12,28 +12,28 @@ project:
 # 实验队列：个体数 / 天数均不固定，在此自行配置。
 # animals / days 为空列表时，从输入文件名自动发现，不限制数量。
 study:
-  animals: ["600","781","719"]          # 例: ["M01", "M02"] 或 ["562", "883"]
-  days: [1]             # 例: [1, 2, 3]；对应文件名中的 dayN
+  animals: []          # 例: ["M01", "M02"] 或 ["562", "883"]
+  days: []             # 例: [1, 2, 3]；对应文件名中的 dayN
   filename_template: "{animal}-day{day}"   # 会话命名约定
   input_pattern: "*.csv"                   # 可被 CLI --pattern 覆盖
 
 # 每次实验由用户指定标记点；此处为默认最小骨架
 bodyparts:
   names:
-    - head
-    - back
-    - tail_base
+    - Head
+    - Back
+    - Tail(Root)
   skeleton:
-    - [head, back]
-    - [back, tail_base]
-  com_joints: [head, back, tail_base]
+    - [Head, Back]
+    - [Back, Tail(Root)]
+  com_joints: [Head, Back, Tail(Root)]
   orientation_pairs:
-    - [head, back]
-    - [back, tail_base]
-    - [head, tail_base]
-  head_joint: head
-  tail_joint: tail_base
-  sitting_joints: [back, tail_base]
+    - [Head, Back]
+    - [Back, Tail(Root)]
+    - [Head, Tail(Root)]
+  head_joint: Head
+  tail_joint: Tail(Root)
+  sitting_joints: [Back, Tail(Root)]
   aliases:
     head: Head
     back: Back
@@ -78,20 +78,20 @@ preprocess:
   max_displacement: 100
   max_velocity: 50
   max_acceleration: 30
-  smooth_window: 5
+  smooth_window: 5  # frame 对应的是25fps
   smooth_p_threshold: 0.5
   enable_occlusion: true
   enable_anomaly: true
   enable_smooth: true
 
 features:
-  window_size: 13
+  window_size: 13  # 25/2  0.5秒
   p_threshold: 0.4
 
 locomotion:
   enabled: true
   # 默认阈值；若提供 animal_id 且 configs/animals/{id}.yaml 存在则覆盖
-  velocity_threshold: 10.0
+  velocity_threshold: 10.0    # 10 pixle/window
   displacement_threshold: 4.0
   window_threshold: 5
   head_tail_difference_threshold: 75.0
@@ -136,7 +136,7 @@ visualization:
   dpi: 300
   formats: [png, pdf]
   figsize: [10.0, 6.0]
-  font_family: PingFang SC
+  font_family: Microsoft YaHei
   colormap: cividis
   # 可按需删减；all 表示生成全部图
   plots:
